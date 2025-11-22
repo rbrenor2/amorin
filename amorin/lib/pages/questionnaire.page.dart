@@ -1,3 +1,4 @@
+import 'package:amorin/repositories/firebase.repository.dart';
 import 'package:flutter/material.dart';
 import 'package:amorin/pages/main.page.dart';
 import 'package:amorin/dtos/update_profile.dto.dart';
@@ -22,7 +23,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
   final supportSystemController = TextEditingController();
   final challengesController = TextEditingController();
 
-  final ProfileService profileService = ProfileService();
+  final ProfileService profileService = ProfileService(FirebaseRepository());
 
   @override
   void dispose() {

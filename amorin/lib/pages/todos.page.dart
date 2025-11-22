@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:amorin/services/todo.service.dart';
+import 'package:amorin/dtos/create_todo.dto.dart';
+import 'package:amorin/repositories/firebase.repository.dart';
 
 class TodosPage extends StatefulWidget {
   const TodosPage({super.key});
@@ -157,17 +160,33 @@ class _TodosPageState extends State<TodosPage> {
                 ),
                 TextButton(
                   child: const Text('Add'),
-                  onPressed: () {
+                  onPressed: () async {
                     final todoName = controller.text;
                     if (todoName.isNotEmpty) {
-                      setState(() {
-                        todos.add({
-                          'name': todoName,
-                          'forMe': forMe,
-                          'completed': false,
+                      try {
+                        // Create and save todo to Firebase
+                        final todoDto = CreateTodoDto(
+                          title: todoName,
+                          forMe: forMe,
+                        );
+                        final todoService = TodoService(FirebaseRepository());
+                        await todoService.createTodo(todoDto);
+
+                        // Add to local state
+                        setState(() {
+                          todos.add({
+                            'name': todoName,
+                            'forMe': forMe,
+                            'completed': false,
+                          });
                         });
-                      });
-                      Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      } catch (e) {
+                        // Show error message
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Failed to add todo: $e')),
+                        );
+                      }
                     }
                   },
                 ),

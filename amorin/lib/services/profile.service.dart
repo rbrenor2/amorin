@@ -6,7 +6,9 @@ abstract class ProfileRepository {
 }
 
 class ProfileService {
-  final ProfileRepository repository = FirebaseRepository();
+  final ProfileRepository repository;
+
+  ProfileService(this.repository);
 
   Future<void> updateProfile(UpdateProfileDto profileData) async {
     await repository.updateProfile(profileData);
