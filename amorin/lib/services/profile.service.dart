@@ -3,6 +3,7 @@ import 'package:amorin/repositories/firebase.repository.dart';
 
 abstract class ProfileRepository {
   Future<void> updateProfile(UpdateProfileDto profileData);
+  Future<UpdateProfileDto?> getProfile();
 }
 
 class ProfileService {
@@ -12,5 +13,9 @@ class ProfileService {
 
   Future<void> updateProfile(UpdateProfileDto profileData) async {
     await repository.updateProfile(profileData);
+  }
+
+  Future<UpdateProfileDto?> getProfile() async {
+    return await repository.getProfile();
   }
 }

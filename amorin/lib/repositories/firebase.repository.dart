@@ -16,6 +16,20 @@ class FirebaseRepository implements ProfileRepository, TodoRepository {
   }
 
   @override
+  Future<UpdateProfileDto?> getProfile() async {
+    final doc = await _firestore
+        .collection('profiles')
+        .doc('rbrenorios@gmail.com')
+        .get();
+
+    if (!doc.exists || doc.data() == null) {
+      return null;
+    }
+
+    return UpdateProfileDto.fromJson(doc.data()!);
+  }
+
+  @override
   Future<void> createTodo(CreateTodoDto todo) async {
     await _firestore
         .collection('profiles')
