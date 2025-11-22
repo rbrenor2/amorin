@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:amorin/pages/main.page.dart';
+import 'package:amorin/dtos/update_profile.dto.dart';
+import 'package:amorin/services/profile.service.dart';
 
 class QuestionnairePage extends StatefulWidget {
   const QuestionnairePage({super.key});
@@ -19,6 +21,8 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
   final careDurationController = TextEditingController();
   final supportSystemController = TextEditingController();
   final challengesController = TextEditingController();
+
+  final ProfileService profileService = ProfileService();
 
   @override
   void dispose() {
@@ -202,14 +206,45 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (formKey.currentState!.validate()) {
-                        // Navigate to main page
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const MainPage(),
-                          ),
+                        final profileData = UpdateProfileDto(
+                          name: nameController.text,
+                          age: int.parse(ageController.text),
+                          careRecipientName:
+                              careRecipientNameController.text.isEmpty
+                              ? null
+                              : careRecipientNameController.text,
+                          careRecipientAge:
+                              careRecipientAgeController.text.isEmpty
+                              ? null
+                              : int.tryParse(careRecipientAgeController.text),
+                          relationship: relationshipController.text.isEmpty
+                              ? null
+                              : relationshipController.text,
+                          conditions: conditionsController.text.isEmpty
+                              ? null
+                              : conditionsController.text,
+                          careDuration: careDurationController.text.isEmpty
+                              ? null
+                              : careDurationController.text,
+                          supportSystem: supportSystemController.text.isEmpty
+                              ? null
+                              : supportSystemController.text,
+                          challenges: challengesController.text.isEmpty
+                              ? null
+                              : challengesController.text,
                         );
+
+                        await profileService.updateProfile(profileData);
+
+                        if (context.mounted) {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const MainPage(),
+                            ),
+                          );
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(

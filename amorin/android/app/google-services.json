@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "454738184550",
+    "project_id": "amorin-63a9f",
+    "storage_bucket": "amorin-63a9f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454738184550:android:691f8542ecba8e0fa3e0a7",
+        "android_client_info": {
+          "package_name": "com.example.amorin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD39tMd1-LXgjDYyy1pCjKYIFx-xMpLl6o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
