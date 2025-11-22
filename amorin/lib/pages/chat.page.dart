@@ -6,9 +6,7 @@ import 'package:flutter_chat_core/flutter_chat_core.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key, required this.title});
-
-  final String title;
+  const ChatPage({super.key});
 
   @override
   State<ChatPage> createState() => _MyHomePageState();
@@ -26,45 +24,35 @@ class _MyHomePageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Chat(
-          chatController: _chatController,
-          currentUserId: 'user1',
-          theme: ChatTheme(
-            colors: ChatColors(
-              primary: Color(0xFF6B4EFF),
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Color(0xff101010),
-              surfaceContainerLow: Color.from(
-                alpha: 1,
-                red: 0.98,
-                green: 0.98,
-                blue: 0.98,
-              ),
-              surfaceContainer: Color(0xFFF5F5F5),
-              surfaceContainerHigh: Color(0xFFEEEEEE),
-            ),
-            typography: ChatTypography.standard(),
-            shape: BorderRadius.all(Radius.circular(20)),
+    return Chat(
+      chatController: _chatController,
+      currentUserId: 'user1',
+      theme: ChatTheme(
+        colors: ChatColors(
+          primary: Color(0xFF6B4EFF),
+          onPrimary: Colors.white,
+          surface: Colors.white,
+          onSurface: Color(0xff101010),
+          surfaceContainerLow: Color.from(
+            alpha: 1,
+            red: 0.98,
+            green: 0.98,
+            blue: 0.98,
           ),
-          onMessageSend: (text) async {
-            _chatController.insertMessage(_buildMessage(text, 'user1'));
-            final responseText = await openAiService.sendMessage(text);
-            _chatController.insertMessage(
-              _buildMessage(responseText, 'assistant'),
-            );
-          },
-          resolveUser: (UserID id) async {
-            return User(id: id, name: 'John Doe');
-          },
+          surfaceContainer: Color(0xFFF5F5F5),
+          surfaceContainerHigh: Color(0xFFEEEEEE),
         ),
+        typography: ChatTypography.standard(),
+        shape: BorderRadius.all(Radius.circular(20)),
       ),
+      onMessageSend: (text) async {
+        _chatController.insertMessage(_buildMessage(text, 'user1'));
+        final responseText = await openAiService.sendMessage(text);
+        _chatController.insertMessage(_buildMessage(responseText, 'assistant'));
+      },
+      resolveUser: (UserID id) async {
+        return User(id: id, name: 'John Doe');
+      },
     );
   }
 
