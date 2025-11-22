@@ -34,14 +34,14 @@ class _MainPageState extends State<MainPage>
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(icon: Icon(Icons.check_box), text: "Todo's"),
             Tab(icon: Icon(Icons.chat), text: 'Chat'),
+            Tab(icon: Icon(Icons.check_box), text: "Todo's"),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [TodosPage(), ChatPage()],
+        children: [ChatPage(), TodosPage()],
       ),
     );
   }
