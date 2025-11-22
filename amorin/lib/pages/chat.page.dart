@@ -15,6 +15,29 @@ class ChatPage extends StatefulWidget {
 class _MyHomePageState extends State<ChatPage> {
   final _chatController = InMemoryChatController();
   final openAiService = OpenAiService();
+  bool _hasGreeted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Send initial greeting when the chat page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_hasGreeted) {
+        _sendGreeting();
+        _hasGreeted = true;
+      }
+    });
+  }
+
+  void _sendGreeting() {
+    final greetingMessage = TextMessage(
+      id: '${Random().nextInt(1000) + 1}',
+      authorId: 'assistant',
+      createdAt: DateTime.now().toUtc(),
+      text: 'Hello! How are you today? 😊',
+    );
+    _chatController.insertMessage(greetingMessage);
+  }
 
   @override
   void dispose() {
