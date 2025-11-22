@@ -27,4 +27,44 @@ class FirebaseRepository implements ProfileRepository, TodoRepository {
           'createdAt': FieldValue.serverTimestamp(),
         });
   }
+
+  @override
+  Future<List<Map<String, dynamic>>> getTodos() async {
+    final snapshot = await _firestore
+        .collection('profiles')
+        .doc('rbrenorios@gmail.com')
+        .collection('todos')
+        .orderBy('createdAt', descending: true)
+        .get();
+
+    return snapshot.docs.map((doc) {
+      final data = doc.data();
+      return {
+        'id': doc.id,
+        'name': data['title'] ?? '',
+        'forMe': data['forMe'] ?? false,
+        'completed': data['completed'] ?? false,
+      };
+    }).toList();
+  }
+
+  @override
+  Future<void> deleteTodo(String todoId) async {
+    await _firestore
+        .collection('profiles')
+        .doc('rbrenorios@gmail.com')
+        .collection('todos')
+        .doc(todoId)
+        .delete();
+  }
+
+  @override
+  Future<void> updateTodo(String todoId, Map<String, dynamic> updates) async {
+    await _firestore
+        .collection('profiles')
+        .doc('rbrenorios@gmail.com')
+        .collection('todos')
+        .doc(todoId)
+        .update(updates);
+  }
 }

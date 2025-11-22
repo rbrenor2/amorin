@@ -12,6 +12,34 @@ class TodosPage extends StatefulWidget {
 
 class _TodosPageState extends State<TodosPage> {
   final List<Map<String, dynamic>> todos = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTodos();
+  }
+
+  Future<void> _loadTodos() async {
+    try {
+      final todoService = TodoService(FirebaseRepository());
+      final loadedTodos = await todoService.getTodos();
+      setState(() {
+        todos.clear();
+        todos.addAll(loadedTodos);
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load todos: $e')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +76,9 @@ class _TodosPageState extends State<TodosPage> {
             ),
           ),
         Expanded(
-          child: todos.isEmpty
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : todos.isEmpty
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -67,18 +97,36 @@ class _TodosPageState extends State<TodosPage> {
                   itemCount: todos.length,
                   itemBuilder: (context, index) {
                     final todo = todos[index];
-                    return ListTile(
-                      leading: Checkbox(
-                        value: todo['completed'] ?? false,
-                        onChanged: (value) {
-                          setState(() {
-                            todos[index]['completed'] = value ?? false;
-                          });
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
+                    return CheckboxListTile(
+                      value: todo['completed'] ?? false,
+                      onChanged: (value) async {
+                        final todoId = todo['id'];
+                        if (todoId != null) {
+                          try {
+                            final todoService = TodoService(
+                              FirebaseRepository(),
+                            );
+                            await todoService.updateTodo(todoId, {
+                              'completed': value ?? false,
+                            });
+                            setState(() {
+                              todos[index]['completed'] = value ?? false;
+                            });
+                          } catch (e) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Failed to update todo: $e'),
+                                ),
+                              );
+                            }
+                          }
+                        }
+                      },
+                      checkboxShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
                       ),
+                      controlAffinity: ListTileControlAffinity.leading,
                       title: Text(
                         todo['name'],
                         style: TextStyle(
@@ -87,12 +135,29 @@ class _TodosPageState extends State<TodosPage> {
                               : null,
                         ),
                       ),
-                      trailing: IconButton(
+                      secondary: IconButton(
                         icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          setState(() {
-                            todos.removeAt(index);
-                          });
+                        onPressed: () async {
+                          final todoId = todo['id'];
+                          if (todoId != null) {
+                            try {
+                              final todoService = TodoService(
+                                FirebaseRepository(),
+                              );
+                              await todoService.deleteTodo(todoId);
+                              setState(() {
+                                todos.removeAt(index);
+                              });
+                            } catch (e) {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Failed to delete todo: $e'),
+                                  ),
+                                );
+                              }
+                            }
+                          }
                         },
                       ),
                     );
