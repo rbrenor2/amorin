@@ -1,4 +1,5 @@
 import 'package:amorin/pages/main.page.dart';
+import 'package:amorin/pages/questionnaire.page.dart';
 import 'package:amorin/pages/splash.page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -33,7 +34,7 @@ class _AmorinAppState extends State<AmorinApp> {
                 });
               },
             )
-          : const MainPage(),
+          : const QuestionnairePage(),
     );
   }
 }
