@@ -1,5 +1,6 @@
 import 'package:amorin/pages/chat.page.dart';
 import 'package:amorin/pages/todos.page.dart';
+import 'package:amorin/pages/profile.page.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -30,10 +31,24 @@ class _MainPageState extends State<MainPage>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Amorin'),
+        title: const Text('Amorin'),
+        actions: [
+          IconButton(
+            icon: const CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, color: Colors.deepPurple),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
+              );
+            },
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
-          tabs: [
+          tabs: const [
             Tab(icon: Icon(Icons.chat), text: 'Chat'),
             Tab(icon: Icon(Icons.check_box), text: "Todo's"),
           ],
@@ -41,7 +56,7 @@ class _MainPageState extends State<MainPage>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [ChatPage(), TodosPage()],
+        children: const [ChatPage(), TodosPage()],
       ),
     );
   }
