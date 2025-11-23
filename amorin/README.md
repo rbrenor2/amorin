@@ -2,6 +2,15 @@
 
 A Flutter-based companion app designed specifically for caregivers who dedicate their lives to caring for others. Amorin combines AI-powered emotional support with self-care tracking to help caregivers maintain their own well-being while caring for loved ones.
 
+## 📱 Screenshots
+
+<p align="center">
+  <img src="assets/screenshots/splash.png" width="200" alt="Splash Screen"/>
+  <img src="assets/screenshots/chat.png" width="200" alt="AI Chat"/>
+  <img src="assets/screenshots/todos.png" width="200" alt="Self-Care Todos"/>
+  <img src="assets/screenshots/profile.png" width="200" alt="Profile"/>
+</p>
+
 ## 🎯 Purpose
 
 Caregiving is one of the most selfless roles someone can take on, but it often comes at a personal cost. Caregivers frequently:
